@@ -40,11 +40,12 @@ struct option {
   int val;
 };
 
-extern char* optarg; /* getopt(3) external variables */
-extern int opterr;
-extern int optind;
-extern int optopt;
-extern int optreset;
+/* getopt(3) external variables */
+extern int opterr;   /* if error message should be printed */
+extern int optind;   /* index into parent argv vector */
+extern int optopt;   /* character checked for validity */
+extern int optreset; /* reset getopt */
+extern char* optarg; /* argument associated with option */
 
 POPT_API int getopt(int, char* const*, const char*);
 POPT_API int getopt_long(int, char* const*, const char*, const struct option*, int*);
