@@ -47,8 +47,18 @@ extern int optopt;   /* character checked for validity */
 extern int optreset; /* reset getopt */
 extern char* optarg; /* argument associated with option */
 
-POPT_API int getopt(int, char* const*, const char*);
-POPT_API int getopt_long(int, char* const*, const char*, const struct option*, int*);
-POPT_API int getopt_long_only(int, char* const*, const char*, const struct option*, int*);
+POPT_API int getopt(int nargc, char* const* nargv, const char* options);
+
+POPT_API int getopt_long(int nargc,
+                         char* const* nargv,
+                         const char* options,
+                         const struct option* long_options,
+                         int* idx);
+
+POPT_API int getopt_long_only(int nargc,
+                              char* const* nargv,
+                              const char* options,
+                              const struct option* long_options,
+                              int* idx);
 
 #endif  // PGETOPT_H_
