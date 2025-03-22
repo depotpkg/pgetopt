@@ -14,12 +14,12 @@ target_include_directories(pgetopt
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-target_compile_definitions(pgetopt PRIVATE popt_IMPLEMENTATION)
+target_compile_definitions(pgetopt PRIVATE POPT_IMPLEMENTATION)
 
 set_target_properties(pgetopt PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(pgetopt PROPERTIES PUBLIC_HEADER pgetopt.h)
 
-if(BUILD_popt_EXAMPLE)
+if(BUILD_POPT_EXAMPLE)
   add_subdirectory(example)
 endif()
 
