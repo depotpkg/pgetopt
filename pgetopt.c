@@ -4,8 +4,8 @@
 
 #include "pgetopt.h"
 
-#include <err.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,6 +46,8 @@ static const char ambig[] = "ambiguous option -- %.*s";
 static const char noarg[] = "option doesn't take an argument -- %.*s";
 static const char illoptchar[] = "unknown option -- %c";
 static const char illoptstring[] = "unknown option -- %s";
+
+#define print_error(...) fprintf(stderr, __VA_ARGS__)
 
 /*
  * Compute the greatest common divisor of a and b.
@@ -149,13 +151,13 @@ static int parse_long_options(char* const* nargv,
   }
   if (!exact_match && second_partial_match) {
     /* ambiguous abbreviation */
-    if (PRINT_ERROR) warnx(ambig, (int)current_argv_len, current_argv);
+    if (PRINT_ERROR) print_error(ambig, (int)current_argv_len, current_argv);
     optopt = 0;
     return (BADCH);
   }
   if (match != -1) { /* option found */
     if (long_options[match].has_arg == no_argument && has_equal) {
-      if (PRINT_ERROR) warnx(noarg, (int)current_argv_len, current_argv);
+      if (PRINT_ERROR) print_error(noarg, (int)current_argv_len, current_argv);
       /*
        * XXX: GNU sets optopt to val regardless of flag
        */
@@ -181,7 +183,7 @@ static int parse_long_options(char* const* nargv,
        * Missing argument; leading ':' indicates no error
        * should be generated.
        */
-      if (PRINT_ERROR) warnx(recargstring, current_argv);
+      if (PRINT_ERROR) print_error(recargstring, current_argv);
       /*
        * XXX: GNU sets optopt to val regardless of flag
        */
@@ -197,7 +199,7 @@ static int parse_long_options(char* const* nargv,
       --optind;
       return (-1);
     }
-    if (PRINT_ERROR) warnx(illoptstring, current_argv);
+    if (PRINT_ERROR) print_error(illoptstring, current_argv);
     optopt = 0;
     return (BADCH);
   }
@@ -336,7 +338,7 @@ start:
 
   if ((optchar = (int)*place++) == (int)':' || (oli = strchr(options, optchar)) == NULL) {
     if (!*place) ++optind;
-    if (PRINT_ERROR) warnx(illoptchar, optchar);
+    if (PRINT_ERROR) print_error(illoptchar, optchar);
     optopt = optchar;
     return (BADCH);
   }
@@ -346,7 +348,7 @@ start:
       /* NOTHING */;
     else if (++optind >= nargc) { /* no arg */
       place = EMSG;
-      if (PRINT_ERROR) warnx(recargchar, optchar);
+      if (PRINT_ERROR) print_error(recargchar, optchar);
       optopt = optchar;
       return (BADARG);
     } else /* white space */
@@ -364,7 +366,7 @@ start:
     else if (oli[1] != ':') {  /* arg not optional */
       if (++optind >= nargc) { /* no arg */
         place = EMSG;
-        if (PRINT_ERROR) warnx(recargchar, optchar);
+        if (PRINT_ERROR) print_error(recargchar, optchar);
         optopt = optchar;
         return (BADARG);
       } else
